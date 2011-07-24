@@ -58,9 +58,9 @@ if __name__ == '__main__':
     min_rep = repetitions(notes)
     rep_tickinch = (5.0/16.0) / min_rep
     min_suc = successions(notes)
-    suc_tickinch = (2.5/16.0) / min_suc
-    time_division = min_suc
+    suc_tickinch = (5.0/16.0) / (2 * min_suc)
     tickinch = max(rep_tickinch, suc_tickinch)
+    time_division = (5.0/32.0) / tickinch
     division_height = (time_division * tickinch)
     divisions = int(math.floor(10.5/division_height))
     pitches = 20

@@ -1,0 +1,11 @@
+== sMIDIreens: Blow MIDI files to bits ==
+A python module that splits MIDI files into chunks and track chunks into events
+for quick and dirty processing.
+
+== Examples ==
+chordshapes.py
+    assists turning hymns into guitar tab by finding many possible shapes for 
+    each chord in the MIDI file.
+musicbox.py
+    turns a carefully crafted MIDI file into strips of paper to feed into a 
+    music box.

@@ -6,6 +6,7 @@ import math
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
+from reportlab.lib.colors import Color
 
 from smidireens import *
 
@@ -102,12 +103,31 @@ if __name__ == '__main__':
     for i,x in enumerate(steps):
         midi_notes[x + midi_base_note] = i
     
+    def setShade(canvas, c):
+        rlcolor = Color(c,c,c)
+        canvas.setFillColor(rlcolor)
+        canvas.setStrokeColor(rlcolor)
     
     WIDTH, HEIGHT = letter
     c = canvas.Canvas(os.path.basename(filename) + '.pdf',pagesize=letter)
     for page in pages:
         for column in range(3):
             column_edge = (0.25 + (column * 2.75))
+            
+            #draw dots
+            setShade(c, 0)
+            dots = page[column]
+            for e in dots:
+                y = 0.25 + ((e[0] % column_ticks) * tickinch)
+                note = ord(e[1][1])
+                if not midi_notes.has_key(note):
+                    print "Unplayable note:", e
+                else:
+                    x = column_edge + 2.75 - (0.25 + (midi_notes[note] * pitch_width))
+                    c.circle(x * inch, y * inch, (1.0/16) * inch, 0, 1)
+                    
+            #draw grids and lines
+            setShade(c, 0.5)
             #column edges
             c.line(column_edge * inch, 0 * inch, column_edge * inch, 11 * inch)
             #pitch lines
@@ -122,17 +142,6 @@ if __name__ == '__main__':
                 x1 = column_edge + 0.25
                 x2 = column_edge + 2.5
                 c.line(x1 * inch, y * inch, x2 * inch, y * inch)
-                
-            dots = page[column]
-            for e in dots:
-                y = 0.25 + ((e[0] % column_ticks) * tickinch)
-                note = ord(e[1][1])
-                if not midi_notes.has_key(note):
-                    print "Unplayable note:", e
-                else:
-                    x = column_edge + 2.75 - (0.25 + (midi_notes[note] * pitch_width))
-                    c.circle(x * inch, y * inch, (1.0/16) * inch, 0, 1)
-                     
         
         c.showPage()
     c.save()
